@@ -48,6 +48,12 @@ from werkzeug.exceptions import HTTPException
 from urllib3.exceptions import MaxRetryError
 from slugify import slugify
 
+from webapp.observability import init_sentry
+
+sentry_dsn = get_flask_env("SENTRY_DSN")
+environment = get_flask_env("FLASK_ENV", "production")
+init_sentry(sentry_dsn, environment)
+
 # Local
 from canonicalwebteam.markdown_response import MarkdownResponse
 from webapp.views import (
