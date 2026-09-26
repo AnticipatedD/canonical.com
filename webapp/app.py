@@ -23,6 +23,13 @@ import flask
 import markdown
 import yaml
 import sentry_sdk
+import time
+start_time = time.time()
+
+@app.route("/health")
+def health():
+    uptime = int(time.time() - start_time)
+    return {"status": "ok", "uptime": uptime, "version": "1.0.0"}, 200
 
 # Packages
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -53,6 +60,10 @@ from webapp.observability import init_sentry
 sentry_dsn = get_flask_env("SENTRY_DSN")
 environment = get_flask_env("FLASK_ENV", "production")
 init_sentry(sentry_dsn, environment)
+
+from webapp.sitemap_loader import load_dynamic_sitemaps
+
+DYNAMIC_SITEMAPS = load_dynamic_sitemaps()
 
 # Local
 from canonicalwebteam.markdown_response import MarkdownResponse
